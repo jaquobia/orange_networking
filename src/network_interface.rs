@@ -16,7 +16,7 @@ impl<G: PacketEnumHolder + Sized + Send + 'static> NetworkThread<G> {
     pub fn send_packet(&self, packet: G) {
         match self.send_packet.send(packet) {
             Ok(_) => { },
-            Err(e) => { 
+            Err(_e) => {
                 // warn!("{e}");
             },
         };
@@ -70,7 +70,8 @@ impl<G: PacketEnumHolder + Sized + Send + 'static> NetworkThread<G> {
                 // Append the partial packet onto the front of the bytes to complete the packet
                 // data
                 if partial_packet.len() > 0 {
-                    warn!("Size of partial packet data: id {}, size {}", partial_packet[0], partial_packet.len()); 
+                    // Disabled due to being unneeded
+                    // warn!("Size of partial packet data: id {}, size {}", partial_packet[0], partial_packet.len());
                 }
                 match G::bytes_to_packet(&[&partial_packet, &bytes[current_point..]].concat()) {
                     Ok((packet_data, consumed)) => {
@@ -120,9 +121,8 @@ impl<G: PacketEnumHolder + Sized + Send + 'static> NetworkThread<G> {
                                 socket.shutdown(std::net::Shutdown::Both);
                                 return;
                             },
-                            _ => {  },
                         };
-                        socket.flush();
+                        socket.flush().expect("Expected a socket flush, never got one.");
                         // buffer_writer.internal_buffer.clear();
                     },
                     Err(e) => { 
