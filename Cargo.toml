@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-orange_networking_derive = {path = "../orange_networking_derive"}
+orange_networking_derive = { git = "https://github.com/jaquobia/orange_networking_derive.git"}
 log = "0.4"
 byteorder = "1"
 # num_enum = "0.5.10"
